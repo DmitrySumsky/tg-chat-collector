@@ -1,0 +1,26 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: compile
+        run: python -m py_compile tg_chat_collector.py
+      # Проверяем то, что можно проверить без токена: разбор аргументов,
+      # создание схемы и чтение состояния из пустой базы.
+      - name: smoke
+        run: |
+          python tg_chat_collector.py --version
+          DB_PATH=/tmp/smoke.sqlite3 python tg_chat_collector.py --status
+          DB_PATH=/tmp/smoke.sqlite3 python tg_chat_collector.py --list-chats
+      - name: docker build
+        run: docker build -t tg-chat-collector .

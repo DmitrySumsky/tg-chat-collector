@@ -1,0 +1,16 @@
+# данные сбора — сырая переписка, в репозиторий не попадают никогда
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+media/
+data/
+
+# секреты
+.env
+*.env
+!.env.example
+allowed.json
+
+__pycache__/
+*.pyc
+.venv/
